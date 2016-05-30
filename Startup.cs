@@ -36,7 +36,7 @@ namespace RC2AureliaTypscriptApp
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
+            app.UseStaticFiles();
             app.UseMvc();
         }
     }
