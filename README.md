@@ -37,3 +37,9 @@ You've created a new ASP.NET Core project. [Learn what's new](https://go.microso
 *   [Publish to Microsoft Azure Web Apps](https://go.microsoft.com/fwlink/?LinkID=398609)
 
 We would love to hear your [feedback](https://go.microsoft.com/fwlink/?LinkId=518015)
+
+# Aurelia setup
+This also serves as my skeleton setup for Aurelia using Typescript
+
+## Source
+* [http://www.sujesharukil.com/blog-native/2015/12/30/creating-an-aurelia-project-with-visual-studio-code-and-typescript-from-scratch](http://www.sujesharukil.com/blog-native/2015/12/30/creating-an-aurelia-project-with-visual-studio-code-and-typescript-from-scratch)
