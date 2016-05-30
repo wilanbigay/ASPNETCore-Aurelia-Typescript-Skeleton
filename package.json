@@ -3,8 +3,14 @@
   "name": "rc2aureliatypscriptapp",
   "devDependencies": {
     "gulp": "^3.9.1",
+    "gulp-changed": "^1.3.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-typescript": "^2.13.5",
     "jspm": "^0.16.35",
-    "tsd": "^0.6.5"
+    "require-dir": "^0.3.0",
+    "tsd": "^0.6.5",
+    "typescript": "^1.8.10"
   },
   "jspm": {
     "directories": {
