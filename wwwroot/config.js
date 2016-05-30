@@ -2,16 +2,22 @@ System.config({
   baseURL: "/",
   defaultJSExtensions: true,
   transpiler: false,
- 
   paths: {
-        "*": "dist/*",
-        "github:*": "jspm_packages/github/*",
-        "npm:*": "jspm_packages/npm/*"
-    },  
+    "*": "dist/*",
+    "github:*": "jspm_packages/github/*",
+    "npm:*": "jspm_packages/npm/*"
+  },
 
   map: {
     "aurelia-bootstrapper": "npm:aurelia-bootstrapper@1.0.0-beta.1.2.1",
     "aurelia-framework": "npm:aurelia-framework@1.0.0-beta.1.2.5",
+    "aurelia-history-browser": "npm:aurelia-history-browser@1.0.0-beta.1.2.1",
+    "aurelia-loader-default": "npm:aurelia-loader-default@1.0.0-beta.1.2.2",
+    "aurelia-logging-console": "npm:aurelia-logging-console@1.0.0-beta.1.2.2",
+    "aurelia-router": "npm:aurelia-router@1.0.0-beta.1.2.3",
+    "aurelia-templating-binding": "npm:aurelia-templating-binding@1.0.0-beta.1.2.4",
+    "aurelia-templating-resources": "npm:aurelia-templating-resources@1.0.0-beta.1.2.6",
+    "aurelia-templating-router": "npm:aurelia-templating-router@1.0.0-beta.1.2.1",
     "bootstrap": "github:twbs/bootstrap@3.3.6",
     "font-awesome": "npm:font-awesome@4.6.3",
     "github:twbs/bootstrap@3.3.6": {

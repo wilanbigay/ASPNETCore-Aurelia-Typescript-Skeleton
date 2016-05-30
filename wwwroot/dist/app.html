@@ -1,17 +1,5 @@
 <template>
-    <div class="container">
-        <form>
-            <div class="form-group">
-                <input type="text" class="form-control" id="inpFirstName" placeholder="First Name" value.bind="firstName">
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control" id="inpLastName" placeholder="Last Name" value.bind="lastName">
-            </div>
-        </form>
-        <footer>
-            <header>
-                <h4>${firstName} ${lastName}</h4>
-            </header>
-        </footer>
+    <div class='page-host container'>
+        <router-view></router-view>
     </div>
 </template>
