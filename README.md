@@ -316,3 +316,70 @@ $ gulp watch
 ``` 
 Try editing app.html and put in something.  Changes should be reflected in the browser after a full refresh.
 
+## More basic Aurelia features
+Let's add more aurelia features now that we have a working skeleton.  
+
+### Changing the default bootstrapper
+Back in VS Code, open wwwroot/index.html file. Notice the line "<body aurelia-app>". By convention, when aurelia-bootstrapper sees aurelia-app, it will look for files named app.html and app.js and load it up. That's how the application is setup to run right now. Let us change that. We need a bit more flexibility and control. change that line to 
+```html
+<body aurelia-app="main">
+```
+
+Now instead of a file named app, aurelia-bootstrapper will look for a file named "main". Let us create that. Right click "src" folder and create a new typescript file "main.ts". Add the following code. This will load app.ts/app.html after doing any required configuration.
+```typescript
+import {Aurelia} from "aurelia-framework";
+
+export function configure(aurelia: Aurelia){
+    aurelia.use
+        .standardConfiguration()
+        .developmentLogging();
+        
+        aurelia.start()
+            .then(a => a.setRoot());
+}
+```
+
+### Adding a bit routing
+Open app.ts and replace it's content with the code below. Once main.ts loads up app.ts, it will look for a configureRouter function. When it finds it, it will execute it. We will create a single route here. Basically, when you navigate to http://localhost:5000, or http://localhost:5000/#home, it will look for (by convention) a file pair "home.js and home.html", load it up, bind it and serve it!
+```typescript
+import {Router, RouterConfiguration} from 'aurelia-router'
+
+export class App {
+    router: Router;
+
+    configureRouter(config: RouterConfiguration, router: Router) {
+        config.title = 'Aurelia Demo';
+        config.map([
+            { route: ['', 'home'], name: 'home', moduleId: 'home', nav: true, title: 'Home' }
+        ]);
+
+        this.router = router;
+    }
+}
+```
+Open app.html and replace its content. <router-view> is an aurelia component that will look what aurelia-router is serving up and load the contents inside it. Essentially, when home.html becomes available, its content will be loaded inside <router-view> tag.
+```html
+<template>
+  <div class="page-host container">
+    <router-view></router-view>
+  </div>
+</template>
+```
+
+Add home.ts and home.html inside src folder with the following contents
+```typescript
+export class Home {
+    welcomeMessage: string = "Aurelia Skeleton using TypeScript and VSCode";
+}
+```
+```html
+<template>
+    <h1>Welcome to ${welcomeMessage}</h1>
+</template>
+```
+
+If gulp watcher and dotnet is still running, you would be able to see the home page when you refresh the browser
+
+
+
+Happy programming!!!
