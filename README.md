@@ -11,9 +11,7 @@ This is take from the blog of [@sujesharuki](https://twitter.com/sujesharukil). 
 *   [Gulp](https://go.microsoft.com/fwlink/?LinkId=518007) for managing client-side libraries
 *   [Typescript]() for compiling typescript
 
-## Setting up this project
-
-### Prerequesites
+## Prerequesites
 The following must already be installed globally on your system
 *   [NodeJS](https://nodejs.org) and [npm](https://www.npmjs.com/)
 *   [Asp.Net 5](https://get.asp.net/)
@@ -22,6 +20,22 @@ The following must already be installed globally on your system
 *   [jspm](http://jspm.io/)
 *   [Gulp](http://gulpjs.com/)
 *   [tsd](https://github.com/DefinitelyTyped/tsd)
+
+## Running the project
+Clone or download this project into your local folder and cd into that folder.  Do the following
+```
+$ npm install
+$ jspm install
+$ gulp build-system build-html build-css
+$ dotnet restore
+$ dotnet run
+```
+Open a browser and navigate to http://localhost:5000 to see the application running.
+
+## Setting up this project
+This project has been built from scratch using the blog post above as a guide.  The following are the steps to get to this point.
+
+
 
 ### Create Web API Application Project
 ```
