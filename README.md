@@ -1,45 +1,71 @@
-# Welcome to ASP.NET Core
+# ASP.NET Core Skeleton with Aurelia and TypeScript
 
-We've made some big updates in this release, so it’s **important** that you spend a few minutes to learn what’s new.
+Contains a stock setup of ASP.NET Core RC2 WebAPI with basic Aurelia and Typescript.
 
-You've created a new ASP.NET Core project. [Learn what's new](https://go.microsoft.com/fwlink/?LinkId=518016)
+This is take from the blog of [@sujesharuki](https://twitter.com/sujesharukil).  Please read his [article](http://www.sujesharukil.com/blog-native/2015/12/30/creating-an-aurelia-project-with-visual-studio-code-and-typescript-from-scratch).
 
 ## This application consists of:
 
 *   Sample pages using ASP.NET Core MVC
-*   [Gulp](https://go.microsoft.com/fwlink/?LinkId=518007) and [Bower](https://go.microsoft.com/fwlink/?LinkId=518004) for managing client-side libraries
-*   Theming using [Bootstrap](https://go.microsoft.com/fwlink/?LinkID=398939)
+*   [Aurelia](http://aurelia.io/) for front end SPA framework
+*   [Gulp](https://go.microsoft.com/fwlink/?LinkId=518007) for managing client-side libraries
+*   [Typescript]() for compiling typescript
 
-## How to
+## Setting up this project
 
-*   [Add a Controller and View](https://go.microsoft.com/fwlink/?LinkID=398600)
-*   [Add an appsetting in config and access it in app.](https://go.microsoft.com/fwlink/?LinkID=699562)
-*   [Manage User Secrets using Secret Manager.](https://go.microsoft.com/fwlink/?LinkId=699315)
-*   [Use logging to log a message.](https://go.microsoft.com/fwlink/?LinkId=699316)
-*   [Add packages using NuGet.](https://go.microsoft.com/fwlink/?LinkId=699317)
-*   [Add client packages using Bower.](https://go.microsoft.com/fwlink/?LinkId=699318)
-*   [Target development, staging or production environment.](https://go.microsoft.com/fwlink/?LinkId=699319)
+### Prerequesites
+The following must already be installed on your system
+*   [NodeJS](https://nodejs.org) and [npm](https://www.npmjs.com/)
+*   [Asp.Net 5](https://get.asp.net/)
+*   [Visual Studio Code](https://code.visualstudio.com/)
+*   [Yeoman](http://yeoman.io/) and [Yeoman ASP.NET Generator](https://github.com/OmniSharp/generator-aspnet)
+*   [jspm](http://jspm.io/)
 
-## Overview
+### Create Web API Application Project
+```
+$ yo aspnet
+```
+Choose WebAPI fpr the type of project and type the project name.  In this case let's name our project MyProject
 
-*   [Conceptual overview of what is ASP.NET Core](https://go.microsoft.com/fwlink/?LinkId=518008)
-*   [Fundamentals of ASP.NET Core such as Startup and middleware.](https://go.microsoft.com/fwlink/?LinkId=699320)
-*   [Working with Data](https://go.microsoft.com/fwlink/?LinkId=398602)
-*   [Security](https://go.microsoft.com/fwlink/?LinkId=398603)
-*   [Client side development](https://go.microsoft.com/fwlink/?LinkID=699321)
-*   [Develop on different platforms](https://go.microsoft.com/fwlink/?LinkID=699322)
-*   [Read more on the documentation site](https://go.microsoft.com/fwlink/?LinkID=699323)
+### Go inside the project folder and download the nuget packages and build the project
+```
+$ cd MyProject
+$ dotnet restore
+$ dotnet build
+```
+If you want to see it running, do
+```
+$ dotnet run
+```
+### Create src, build and test folders.  
+The src folder is where the front end assets resides. The build folder will contain  the build articfacts and test folder will contain the test scripts.
 
-## Run & Deploy
+```
+$ mkdir src
+$ mkdir build
+$ mkdir test
+```
 
-*   [Run your app](https://go.microsoft.com/fwlink/?LinkID=517851)
-*   [Run tools such as EF migrations and more](https://go.microsoft.com/fwlink/?LinkID=517853)
-*   [Publish to Microsoft Azure Web Apps](https://go.microsoft.com/fwlink/?LinkID=398609)
+### Create the default page inside wwwroot
+```
+$ cd wwwroot
+$ yo aspnet:HTMLPage index
+$ cd ..
+```
+This will create the index.html page with a welcome message.  You won't still be able to see this page until you complete the next section
 
-We would love to hear your [feedback](https://go.microsoft.com/fwlink/?LinkId=518015)
-
-# Aurelia setup
-This also serves as my skeleton setup for Aurelia using Typescript
-
-## Source
-* [http://www.sujesharukil.com/blog-native/2015/12/30/creating-an-aurelia-project-with-visual-studio-code-and-typescript-from-scratch](http://www.sujesharukil.com/blog-native/2015/12/30/creating-an-aurelia-project-with-visual-studio-code-and-typescript-from-scratch)
+### Configuring the application to use static files
+Open VSCode by typing
+```
+code .
+```
+Open project.json file and add the following like in the list of packages
+```javascript
+"Microsoft.AspNetCore.StaticFiles": "1.0.0-rc2-final"
+```
+Open Startup.cs and add the following lines in the configure method
+```
+app.UseDefaultFiles();
+app.UseStaticFiles();
+```
+Now run the application and go to http://localhost:5000 and see index.html loaded.  You may want to edit index.html and put something to see it working.
