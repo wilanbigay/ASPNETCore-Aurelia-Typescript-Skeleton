@@ -197,3 +197,122 @@ Open app.html and replace its content with the code:
     </div>
 </template>
 ```
+
+### Setup the build process
+It's now time to build our project.
+
+Back in VSCode, create a new file called "paths.js" and put the code below. This file contains the paths of all our source files and where the destination folder is. This is the key to our gulp build process.
+```javascript
+var appRoot = 'src/';
+var outputRoot = 'wwwroot/dist/';
+
+module.exports = {
+  root: appRoot,
+  source: appRoot + '**/*.ts',
+  html: appRoot + '**/*.html',
+  css: appRoot + '**/*.css',
+  output: outputRoot,
+  dtsSrc: [
+    'typings/**/*.ts',
+    './wwwroot/jspm_packages/**/*.d.ts'
+  ]
+}
+```
+
+Now, create a folder with the name "tasks" and then add a file called "build.js" with the following code
+```javascript
+var gulp = require("gulp");
+var paths = require("../paths");
+var plumber = require("gulp-plumber");
+var changed = require("gulp-changed");
+var typescript = require("gulp-typescript");
+var tsc = require("typescript");
+var sourcemaps = require("gulp-sourcemaps");
+var tsProject = typescript.createProject("./tsconfig.json", {
+    typescript: tsc
+});
+
+gulp.task("build-system", function () {
+    return gulp.src(paths.dtsSrc.concat(paths.source))
+        .pipe(plumber())
+        .pipe(sourcemaps.init({loadMaps: true}))
+        .pipe(changed(paths.output, {extension: '.js'}))
+        .pipe(typescript(tsProject))
+        .pipe(sourcemaps.write({includeContent: true}))
+        .pipe(gulp.dest(paths.output));
+});
+```
+
+The packages used in the gulpfile needs to be installed.  So back in the command prompt,
+```
+$ npm install gulp-plumber gulp-changed gulp-typescript gulp-sourcemaps typescript --save-dev
+```
+
+While we're at it, let's also install the type definitions for these gulp packages
+```
+$ tsd install node gulp-plumber gulp-changed gulp-typescript gulp-sourcemaps typescript core-js --save
+``` 
+
+Back in VS Code, open build/tasks/build.js and add the following two tasks at the end of the file. This basically copies all the "html" and "css" files over to a single distrubution folder where TypeScript puts the generated JavaScript files. the distribution folder is "wwwroot/dist".
+```javascript
+gulp.task("build-html", function () {
+    return gulp.src(paths.html)
+        .pipe(changed(paths.output, { extension: '.html'}))
+        .pipe(gulp.dest(paths.output));
+});
+
+
+gulp.task("build-css", function () {
+    return gulp.src(paths.css)
+        .pipe(changed(paths.output, { extension: '.css'}))
+        .pipe(gulp.dest(paths.output));
+});
+```
+Open config.js file under wwwroot, and replace the "paths" property with the section below. All we are doing is saying that all our files will be served from "dist/" unless otherwise specified.
+```javascript
+paths: {
+        "*": "dist/*",
+        "github:*": "jspm_packages/github/*",
+        "npm:*": "jspm_packages/npm/*"
+    }
+```
+
+One final thing, we need require-dir so that gulp would look for our build task in our build folder
+```
+$ npm install require-dir --save-dev
+```
+
+Now, open gulp file and replace its content with the code
+```javascript
+require('require-dir')('build/tasks');
+```
+
+Let's compile and run the project
+```
+$ gulp build-system build-html build-css
+$ dotnet run
+```
+Navigate to http://localhost:5000 and see it in all its glory.
+Now, let's create a task that watches for changes and recompile them when it sees one.  Add a file under tasks folder called "watch.js and put in the following code
+```javascript
+var gulp = require('gulp');
+var paths = require('../paths');
+
+// outputs changes to files to the console
+function reportChange(event) {
+    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+}
+
+gulp.task('watch', function () {
+    gulp.watch(paths.source, ['build-system']).on('change', reportChange);
+    gulp.watch(paths.html, ['build-html']).on('change', reportChange);
+    gulp.watch(paths.less, ['build-css']).on('change', reportChange);
+});
+```
+
+Instead of doing ```gulp build-system build-html build-css```, do the following instead
+```
+$ gulp watch
+``` 
+Try editing app.html and put in something.  Changes should be reflected in the browser after a full refresh.
+
