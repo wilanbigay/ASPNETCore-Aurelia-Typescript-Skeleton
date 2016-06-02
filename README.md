@@ -324,7 +324,7 @@ require('require-dir')('build/tasks');
 
 Let's compile and run the project
 ```
-$ gulp build-system build-html build-css
+$ gulp build
 $ dotnet run
 ```
 Navigate to http://localhost:5000 and see it in all its glory.
