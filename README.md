@@ -128,12 +128,10 @@ $ yo aspnet:Gulpfile
 ```
 This will create gulpfile.js
 
-### Initialize jspm inside of wwwroot
+### Initialize jspm 
 Enter "./wwwroot" for the second question and "no" to the transpiler. Leave the rest to its defaults.
 ```
-$ cd wwwroot
 $ jspm init
-$ cd ..
 ```
 
 ### Install type definitions for 
@@ -236,6 +234,7 @@ module.exports = {
 Now, create a folder with the name "tasks" and then add a file called "build.js" with the following code
 ```javascript
 var gulp = require("gulp");
+var runSequence = require('run-sequence');
 var paths = require("../paths");
 var plumber = require("gulp-plumber");
 var changed = require("gulp-changed");
@@ -259,7 +258,7 @@ gulp.task("build-system", function () {
 
 The packages used in the gulpfile needs to be installed.  So back in the command prompt,
 ```
-$ npm install gulp-plumber gulp-changed gulp-typescript gulp-sourcemaps typescript --save-dev
+$ npm install gulp-plumber gulp-changed gulp-typescript gulp-sourcemaps run-sequence del vinyl-paths run-sequence typescript --save-dev
 ```
 
 While we're at it, let's also install the type definitions for these gulp packages
@@ -281,7 +280,29 @@ gulp.task("build-css", function () {
         .pipe(changed(paths.output, { extension: '.css'}))
         .pipe(gulp.dest(paths.output));
 });
+
+gulp.task('build', function(callback) {
+  return runSequence(
+    'clean',
+    ['build-system', 'build-html', 'build-css'],
+    callback
+  );
+});
 ```
+Create another file in build/tasks called clean.js with the following contents
+```javascript
+var gulp = require('gulp');
+var paths = require('../paths');
+var del = require('del');
+var vinylPaths = require('vinyl-paths');
+
+// deletes all files in the output path
+gulp.task('clean', function() {
+  return gulp.src([paths.output])
+    .pipe(vinylPaths(del));
+});
+```
+
 Open config.js file under wwwroot, and replace the "paths" property with the section below. All we are doing is saying that all our files will be served from "dist/" unless otherwise specified.
 ```javascript
 paths: {
@@ -394,6 +415,66 @@ export class Home {
 
 If gulp watcher and dotnet is still running, you would be able to see the home page when you refresh the browser
 
+## Bundling
+To minimize the number of request made to the server, we need to bundle our files
+
+### Install the aurelia bunlder and text plugin
+```
+$ npm install aurelia-bundler --save-dev
+$ jspm install text
+```
+
+### Create the bundle task
+In VSCode, create a file in called bundle.js under build/tasks folder with the following contents
+```javascript
+var gulp = require('gulp');
+var bundle = require('aurelia-bundler').bundle;
+
+var config = {
+  force: true,
+  baseURL: './wwwroot',                   // baseURL of the application
+  configPath: './wwwroot/config.js',      // config.js file. Must be within `baseURL`
+  bundles: {
+    "dist/app-build": {           // bundle name/path. Must be within `baseURL`. Final path is: `baseURL/dist/app-build.js`.
+      includes: [
+        '[**/*.js]',
+        '**/*.html!text',
+        '**/*.css!text',        
+      ],
+      options: {
+        inject: true,
+        minify: true
+      }
+    },
+    "dist/vendor-build": {
+      includes: [
+        'aurelia-framework', 
+        'aurelia-bootstrapper', 
+        'aurelia-history-browser', 
+        'aurelia-loader-default',
+        'aurelia-logging-console', 
+        'aurelia-router',
+        'aurelia-templating-binding', 
+        'aurelia-templating-resources', 
+        'aurelia-templating-router',
+        'bootstrap/css/bootstrap.css!text'
+      ],
+      options: {
+        inject: true,
+        minify: true
+      }
+    }
+  }
+};
+
+gulp.task('bundle', ['build'], function() {
+  return bundle(config);
+});
+
+gulp.task('unbundle', function() {
+  return bundler.unbundle(config);
+});
+```
 
 
 Happy programming!!!
