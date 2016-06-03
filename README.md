@@ -26,7 +26,7 @@ Clone or download this project into your local folder and cd into that folder.  
 ```
 $ npm install
 $ jspm install
-$ gulp build-system build-html build-css
+$ gulp build
 $ dotnet restore
 $ dotnet run
 ```

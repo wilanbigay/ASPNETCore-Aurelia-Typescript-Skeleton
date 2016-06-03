@@ -37,7 +37,7 @@ gulp.task("build-css", function () {
 // in ./clean.js), then runs the build-system
 // and build-html tasks in parallel
 // https://www.npmjs.com/package/gulp-run-sequence
-gulp.task('build', function(callback) {
+gulp.task('build', ['unbundle'], function(callback) {
   return runSequence(
     'clean',
     ['build-system', 'build-html', 'build-css'],
